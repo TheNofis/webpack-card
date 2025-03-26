@@ -38,27 +38,30 @@ export default class Card {
       "overflow-hidden",
       "max-w-sm",
       "mx-auto",
+      "p-2",
     );
 
     this._element.innerHTML = `<img
       src="${this.image}"
           alt="Sample Image"
-          class="w-full h-48 object-cover"
+          class="w-full h-48 object-cover rounded-lg"
         />
         <div class="p-4">
       <h2 class="text-xl font-bold mb-2">${this.title}</h2>
           <p class="text-gray-600">
         ${this.description}
           </p>
+        </div>
+    <div class="flex gap-2">
           <button
             class="changeCard mt-4 bg-indigo-600 text-white w-full py-2 rounded-lg hover:bg-indigo-700 transition"
           >
-            Edit Card
+            Edit
           </button>
           <button class="deleteCard mt-4 bg-red-600 text-white w-full py-2 rounded-lg hover:bg-red-700 transition">
-            Delete Card
+            Delete
           </button>
-        </div>`;
+    </div>`;
     container.appendChild(this._element);
   }
 }

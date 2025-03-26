@@ -6,7 +6,6 @@ import Modal from "./components/modal/modal";
 const CreateModal = new Modal({
   id: "create-modal",
   label: "Create Card",
-  state: false,
   onSave: () => {
     CardController.addCard({
       title: CreateModal.element.querySelector(".modal-title").value,
@@ -19,37 +18,40 @@ const CreateModal = new Modal({
     CreateModal.element.querySelector(".modal-image-url").value = "";
     CreateModal.element.querySelector(".modal-description").value = "";
   },
-  onOpen: () => {},
 });
 
 const EditModal = new Modal({
   id: "edit-modal",
   label: "Edit Card",
-  state: false,
-  onSave: () => {},
-  onOpen: () => {},
 });
 
 CreateModal.init();
 EditModal.init();
 CardController.init();
 
-document
-  .querySelector(".createCard")
-  .addEventListener("click", () => (CreateModal.isOpen = true));
+document.querySelector("body").addEventListener("click", (e) => {
+  if (e.target.classList.contains("close-modal")) return closeModal();
+  if (e.target.classList.contains("createCard")) return createCard();
+  if (e.target.classList.contains("changeCard")) return changeCard(e);
+  if (e.target.classList.contains("deleteCard")) return deleteCard(e);
+});
+function createCard() {
+  CreateModal.isOpen = true;
+}
 
-document.querySelector(".cardlist").addEventListener("click", (e) => {
-  if (!e.target.classList.contains("deleteCard")) return;
+function closeModal() {
+  CreateModal.isOpen = false;
+  EditModal.isOpen = false;
+}
 
+function deleteCard(e) {
   const parent = e.target.parentElement.parentElement;
   const id = parent.id;
 
   CardController.deleteCard(id);
-});
+}
 
-document.querySelector(".container").addEventListener("click", (e) => {
-  if (!e.target.classList.contains("changeCard")) return;
-
+function changeCard(e) {
   const parent = e.target.parentElement.parentElement;
   const card = CardController.getCard(parent.id);
 
@@ -69,4 +71,4 @@ document.querySelector(".container").addEventListener("click", (e) => {
   };
 
   EditModal.isOpen = true;
-});
+}
