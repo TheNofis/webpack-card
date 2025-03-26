@@ -39,6 +39,8 @@ export default class Card {
       "max-w-sm",
       "mx-auto",
       "p-2",
+      "min-w-[230px]",
+      "max-w-[230px]",
     );
 
     this._element.innerHTML = `<img
@@ -47,12 +49,10 @@ export default class Card {
           class="w-full h-48 object-cover rounded-lg"
         />
         <div class="p-4">
-      <h2 class="text-xl font-bold mb-2">${this.title}</h2>
-          <p class="text-gray-600">
-        ${this.description}
-          </p>
+          <h2 class="text-xl font-bold mb-2">${this.title}</h2>
+          <p class="text-gray-600">${this.description.length > 100 ? this.description.slice(0, 100) + "..." : this.description}</p>
         </div>
-    <div class="flex gap-2">
+        <div class="flex gap-2">
           <button
             class="changeCard mt-4 bg-indigo-600 text-white w-full py-2 rounded-lg hover:bg-indigo-700 transition"
           >
