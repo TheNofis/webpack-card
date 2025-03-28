@@ -1,15 +1,14 @@
 {
-  "name": "tailwindcss-postcss-webpack-starter",
+  "name": "webpack-card",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve",
     "build": "webpack"
   },
   "keywords": [],
-  "author": "",
+  "author": "TheNofis",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.4.14",
