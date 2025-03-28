@@ -24,7 +24,6 @@ export default class Card {
 
     this._element.querySelector("p").innerText = value;
     this.description = value;
-    console.log(value);
   }
 
   init() {
