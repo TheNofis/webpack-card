@@ -1,18 +1,20 @@
 import Card from "./card";
+import { CardData } from "./card.interface";
+
 import cuid from "cuid";
 
 class CardController {
-  #cards = [];
+  #cards: Card[] = [];
 
-  get cards() {
+  get cards(): Card[] {
     return this.#cards;
   }
 
-  init() {
+  init(): void {
     this.#load();
   }
 
-  create(card) {
+  create(card: Omit<CardData, "id"> & { id?: string }): void {
     const newCard = new Card({
       id: card.id || cuid(),
       title: card.title,
@@ -21,34 +23,35 @@ class CardController {
     });
 
     this.#cards.push(newCard.init());
-
     this.#save();
   }
 
-  delete(id) {
-    const card = this.getCard(id);
+  delete(id: string): void {
+    const card: Card | null = this.get(id)!;
+    if (!card.element) return;
+
     card.element.remove();
-    this.#cards = this.#cards.filter((card) => card.id !== id);
-
+    this.#cards = this.#cards.filter((card: Card) => card.id !== id);
     this.#save();
   }
 
-  edit(id, { title, image, description }) {
-    const card = this.getCard(id);
-
+  edit(
+    id: string,
+    { title, image, description }: Partial<Omit<CardData, "id">>,
+  ): void {
+    const card = this.get(id)!;
     card.title = title;
     card.image = image;
     card.description = description;
-
     this.#save();
   }
 
-  get(id) {
+  get(id: string): Card | undefined {
     return this.#cards.find((card) => card.id === id);
   }
 
-  #save() {
-    const data = this.#cards.map((card) => ({
+  #save(): void {
+    const data: CardData[] = this.#cards.map((card) => ({
       id: card.id,
       title: card.title,
       image: card.image,
@@ -57,11 +60,9 @@ class CardController {
     localStorage.setItem("cards", JSON.stringify(data));
   }
 
-  #load() {
-    const cards = JSON.parse(localStorage.getItem("cards"));
-    if (!cards) return;
-
-    cards.forEach((card) => this.create(card));
+  #load(): void {
+    const cards = JSON.parse(localStorage.getItem("cards")!) as CardData[];
+    cards?.forEach((card) => this.create(card));
   }
 }
 

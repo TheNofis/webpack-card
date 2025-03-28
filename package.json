@@ -25,6 +25,8 @@
     "webpack-dev-server": "^4.13.2"
   },
   "dependencies": {
-    "cuid": "^3.0.0"
+    "cuid": "^3.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.2"
   }
 }

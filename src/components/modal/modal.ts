@@ -1,10 +1,16 @@
+import { ModalOptions } from "./modal.interface";
+
 const JUST_FUNCTION = () => {};
 
 export default class Modal {
-  _element = null;
+  private _element: HTMLElement | null = null;
 
-  onSave = JUST_FUNCTION;
-  onOpen = JUST_FUNCTION;
+  public id: string;
+  public label: string;
+  public state: boolean;
+
+  public onSave: () => void = JUST_FUNCTION;
+  public onOpen: () => void = JUST_FUNCTION;
 
   constructor({
     id,
@@ -12,7 +18,7 @@ export default class Modal {
     label = "Modal",
     onSave = JUST_FUNCTION,
     onOpen = JUST_FUNCTION,
-  }) {
+  }: ModalOptions) {
     this.id = id;
     this.label = label;
     this.state = state;
@@ -20,24 +26,29 @@ export default class Modal {
     this.onOpen = onOpen;
   }
 
-  get isOpen() {
+  get isOpen(): boolean {
     return this.state;
   }
 
-  set isOpen(value) {
+  set isOpen(value: boolean) {
     this.state = value;
-    if (value) {
-      this.onOpen();
-      this._element.classList.remove("hidden");
-    } else this._element.classList.add("hidden");
+    if (this._element) {
+      if (value) {
+        this.onOpen();
+        this._element.classList.remove("hidden");
+      } else {
+        this._element.classList.add("hidden");
+      }
+    }
   }
 
-  get element() {
+  get element(): HTMLElement | null {
     return this._element;
   }
 
-  init() {
-    const container = document.querySelector(".container");
+  init(): void {
+    const container = document.querySelector(".container")!;
+
     this._element = document.createElement("div");
     this._element.classList.add(
       "fixed",
@@ -48,7 +59,10 @@ export default class Modal {
       "items-center",
       "justify-center",
     );
-    if (!this.state) this._element.classList.add("hidden");
+
+    if (!this.state) {
+      this._element.classList.add("hidden");
+    }
 
     this._element.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md" id=${this.id}>
@@ -56,7 +70,6 @@ export default class Modal {
           <h2 class="text-2xl font-bold mb-4 my-auto">${this.label}</h2>
           <button class="close-modal mb-auto text-slate-400 text-3xl">×</button>
         </div>
-
         <form>
           <div class="mb-4">
             <label class="block text-gray-700">Title</label>
@@ -89,12 +102,16 @@ export default class Modal {
             Save
           </button>
         </form>
-      </div>`;
-    this._element.querySelector("form").addEventListener("submit", (e) => {
+      </div>
+    `;
+
+    const form = this._element.querySelector("form")!;
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       this.isOpen = false;
       this.onSave();
     });
+
     container.appendChild(this._element);
   }
 }
