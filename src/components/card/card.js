@@ -1,36 +1,54 @@
 export default class Card {
-  _element = null;
+  #element = null;
+
   constructor({ id, title, image, description }) {
     this.id = id;
-    this.title = title;
-    this.image = image;
-    this.description = description;
+    this._title = title;
+    this._image = image;
+    this._description = description;
   }
 
-  set setTitle(value) {
-    if (!value || this._element == null) return;
+  set title(value) {
+    if (!value || this.#element == null) return;
 
-    this._element.querySelector("h2").innerText = value;
-    this.title = value;
+    this.#element.querySelector("h2").innerText = value;
+    this._title = value;
   }
-  set setImage(value) {
-    if (!value || this._element == null) return;
+  set image(value) {
+    if (!value || this.#element == null) return;
 
-    this._element.querySelector("img").src = value;
-    this.image = value;
+    this.#element.querySelector("img").src = value;
+    this._image = value;
   }
-  set setDescription(value) {
-    if (!value || this._element == null) return;
+  set description(value) {
+    if (!value || this.#element == null) return;
 
-    this._element.querySelector("p").innerText = value;
-    this.description = value;
+    this.#element.querySelector("p").innerText = value;
+    this._description = value;
   }
 
-  init() {
+  get title() {
+    return this._title;
+  }
+  get image() {
+    return this._image;
+  }
+  get description() {
+    return this._description;
+  }
+
+  get element() {
+    return this.#element;
+  }
+
+  #createCard() {
+    if (this.#element != null) return;
+
     const container = document.querySelector(".cardlist");
-    this._element = document.createElement("div");
-    this._element.id = this.id;
-    this._element.classList.add(
+
+    this.#element = document.createElement("div");
+    this.#element.id = this.id;
+    this.#element.classList.add(
       "bg-white",
       "shadow-md",
       "rounded-lg",
@@ -42,14 +60,14 @@ export default class Card {
       "max-w-[230px]",
     );
 
-    this._element.innerHTML = `<img
+    this.#element.innerHTML = `<img
       src="${this.image}"
           alt="Sample Image"
           class="w-full h-48 object-cover rounded-lg"
         />
         <div class="p-4">
           <h2 class="text-xl font-bold mb-2">${this.title}</h2>
-          <p class="text-gray-600">${this.description.length > 100 ? this.description.slice(0, 100) + "..." : this.description}</p>
+          <p class="text-gray-600">${this?.description?.length > 100 ? this?.description?.slice(0, 100) + "..." : this?.description}</p>
         </div>
         <div class="flex gap-2">
           <button
@@ -61,6 +79,12 @@ export default class Card {
             Delete
           </button>
     </div>`;
-    container.appendChild(this._element);
+    container.appendChild(this.#element);
+  }
+
+  init() {
+    this.#createCard();
+
+    return this;
   }
 }

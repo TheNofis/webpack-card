@@ -2,57 +2,66 @@ import Card from "./card";
 import cuid from "cuid";
 
 class CardController {
-  cards = [];
+  #cards = [];
 
-  init() {
-    this.load();
+  get cards() {
+    return this.#cards;
   }
 
-  addCard(card) {
+  init() {
+    this.#load();
+  }
+
+  create(card) {
     const newCard = new Card({
-      id: cuid(),
+      id: card.id || cuid(),
       title: card.title,
       image: card.image,
       description: card.description,
     });
-    newCard.init();
-    this.cards.push(newCard);
-    this.save();
+
+    this.#cards.push(newCard.init());
+
+    this.#save();
   }
 
-  get cards() {
-    return this.cards;
-  }
-
-  getCard(id) {
-    return this.cards.find((card) => card.id === id);
-  }
-  editCard(id, { title, image, description }) {
+  delete(id) {
     const card = this.getCard(id);
-    card.setTitle = title;
-    card.setImage = image;
-    card.setDescription = description;
+    card.element.remove();
+    this.#cards = this.#cards.filter((card) => card.id !== id);
 
-    this.save();
+    this.#save();
   }
 
-  deleteCard(id) {
+  edit(id, { title, image, description }) {
     const card = this.getCard(id);
-    card._element.remove();
-    this.cards = this.cards.filter((card) => card.id !== id);
 
-    this.save();
+    card.title = title;
+    card.image = image;
+    card.description = description;
+
+    this.#save();
   }
 
-  save() {
-    localStorage.setItem("cards", JSON.stringify(this.cards));
+  get(id) {
+    return this.#cards.find((card) => card.id === id);
   }
 
-  load() {
+  #save() {
+    const data = this.#cards.map((card) => ({
+      id: card.id,
+      title: card.title,
+      image: card.image,
+      description: card.description,
+    }));
+    localStorage.setItem("cards", JSON.stringify(data));
+  }
+
+  #load() {
     const cards = JSON.parse(localStorage.getItem("cards"));
     if (!cards) return;
 
-    cards.forEach((card) => this.addCard(card));
+    cards.forEach((card) => this.create(card));
   }
 }
 
