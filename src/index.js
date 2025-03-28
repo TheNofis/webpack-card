@@ -7,7 +7,7 @@ const CreateModal = new Modal({
   id: "create-modal",
   label: "Create Card",
   onSave: () => {
-    CardController.addCard({
+    CardController.create({
       title: CreateModal.element.querySelector(".modal-title").value,
       image: CreateModal.element.querySelector(".modal-image-url").value,
       description:
@@ -48,12 +48,12 @@ function deleteCard(e) {
   const parent = e.target.parentElement.parentElement;
   const id = parent.id;
 
-  CardController.deleteCard(id);
+  CardController.delete(id);
 }
 
 function changeCard(e) {
   const parent = e.target.parentElement.parentElement;
-  const card = CardController.getCard(parent.id);
+  const card = CardController.get(parent.id);
 
   EditModal.onOpen = () => {
     EditModal.element.querySelector(".modal-title").value = card.title;
@@ -63,7 +63,7 @@ function changeCard(e) {
   };
 
   EditModal.onSave = () => {
-    CardController.editCard(parent.id, {
+    CardController.edit(parent.id, {
       title: EditModal.element.querySelector(".modal-title").value,
       image: EditModal.element.querySelector(".modal-image-url").value,
       description: EditModal.element.querySelector(".modal-description").value,
